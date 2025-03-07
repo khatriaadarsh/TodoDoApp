@@ -1,6 +1,6 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 
-const AllItems = ({data}) => {
+const AllItems = ({data, setdata}) => {
   return (
     <View>
       <View style={styles.headingContainer}>
@@ -14,7 +14,7 @@ const AllItems = ({data}) => {
           <View
             style={[
               styles.itemContainer,
-              {backgroundColor: item.stock < 20 ? '#34b7eb' : '#34ebd6'},
+              {backgroundColor: item.stock < 20 ? '#a15858' : '#34ebd6'},
             ]}>
             <Text style={styles.headingText}>{item.name}</Text>
             <Text style={styles.headingText}>{item.stock}</Text>
