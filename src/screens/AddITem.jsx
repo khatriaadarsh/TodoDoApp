@@ -17,7 +17,7 @@ const AddITem = ({data, setdata}) => {
     const newItem = {
       id: Date.now(),
       name: itemName,
-      stock: stockAmt,
+      stock: stockAmt ? parseInt(stockAmt) : 0,
     };
     setdata([...data, newItem]);
     setitemName('');
@@ -27,6 +27,7 @@ const AddITem = ({data, setdata}) => {
 
   const editItemHandler = item => {
     setitemName(item.name);
+    setstockAmt(item.stock.toString());
     setisEdit(true);
     seteditItemId(item.id);
   };
@@ -37,10 +38,14 @@ const AddITem = ({data, setdata}) => {
     setdata(
       data.map(item =>
         item.id === editItemId
-          ? {...item, name: itemName, stock: stockAmt}
+          ? {...item, name: itemName, stock: stockAmt ? parseInt(stockAmt) : 0}
           : item,
       ),
     );
+    setitemName('');
+    setstockAmt('');
+    setisEdit(false);
+    editItemId(null);
   };
   return (
     <View style={styles.container}>
@@ -60,7 +65,7 @@ const AddITem = ({data, setdata}) => {
         placeholderTextColor="#3477eb"
         style={styles.input}
         value={stockAmt}
-        onChangeText={stock => setstockAmt(stock)}
+        onChangeText={item => setstockAmt(item)}
       />
       <Pressable
         style={styles.AddItemBtn}
