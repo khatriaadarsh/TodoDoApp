@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   Pressable,
   StyleSheet,
@@ -13,7 +14,36 @@ const AddITem = ({data, setdata}) => {
   const [stockAmt, setstockAmt] = useState('');
   const [isEdit, setisEdit] = useState(false);
   const [editItemId, seteditItemId] = useState(null);
+  const [errors, setErrors] = useState({itemName: '', stockAmt: ''});
+  const stringRegex = /^[a-zA-Z\']+$/; // Letters, spaces, hyphens, apostrophes
+  const numberRegex = /^[0-9]+$/; //  Positive integers (including 0)
+
+  const validateInput = () => {
+    let isValid = true;
+    const newError = {itemName: '', stockAmt: ''};
+    if (!itemName.trim) {
+      newError.itemName = Alert.alert('Item name is required');
+    } else if (!stringRegex.test(itemName.trim())) {
+      newError.itemName = Alert.alert('The item contains only letters');
+      isValid = false;
+    }
+
+    if (!stockAmt.trim()) {
+      newError.stockAmt = Alert.alert('stock quantity is requried');
+      isValid = false;
+    } else if (!numberRegex.test(stockAmt.trim())) {
+      newError.stockAmt = Alert.alert('Stock must be a positive whole number');
+      isValid = false;
+    } else if (parseInt(stockAmt) < 0) {
+      newError.stockAmt = Alert.alert('Stock cannot be negative!');
+      isValid = false;
+    }
+
+    setErrors(newError);
+    return isValid;
+  };
   const AddItemhandler = () => {
+    if (!validateInput()) return;
     const newItem = {
       id: Date.now(),
       name: itemName,
@@ -22,7 +52,8 @@ const AddITem = ({data, setdata}) => {
     setdata([...data, newItem]);
     setitemName('');
     setstockAmt('');
-    setisEdit(false);
+    // setisEdit(false);
+    setErrors({itemName: '', stockAmt: ''});
   };
 
   const editItemHandler = item => {
@@ -45,7 +76,8 @@ const AddITem = ({data, setdata}) => {
     setitemName('');
     setstockAmt('');
     setisEdit(false);
-    editItemId(null);
+    seteditItemId(null);
+    setErrors({itemName: '', stockAmt: ''});
   };
   return (
     <View style={styles.container}>
@@ -148,7 +180,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: '15',
+    paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
   },
